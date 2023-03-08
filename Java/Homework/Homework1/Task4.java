@@ -12,51 +12,53 @@ public class Task4 {
         Scanner iScanner = new Scanner(System.in);
         System.out.println("Enter the equation: ");
         String equation = iScanner.nextLine();
-        equation = equation.replaceAll("\\s", "");
+        equation = equation.replaceAll("\\s", ""); // заменяем все пробелы (\\s) пустую строку
 
         // Находим знак = и результат
-        int equal_sign = equation.indexOf("=");
-        int e = Integer.parseInt(equation.substring(equal_sign + 1, equation.length()));
+        int equal_sign = equation.indexOf("="); // indexOf("=") возвращает индекс знака = в строке
+        int e = Integer.parseInt(equation.substring(equal_sign + 1, equation.length())); // substring(equal_sign + 1, equation.length() возвращает 
+        // подстроку по указанным в скобках индексам, от знака = до конца выражения, сразу переводим в int
 
         // Находим знак операции и определяем его
-        int sign_index;
-        char sign;
-        if (equation.indexOf("+") == -1) {
-            if (equation.indexOf("-") == -1) {
-                if (equation.indexOf("*") == -1) {
-                    sign_index = equation.indexOf("/");
+        int sign_index; // индекс знака операции
+        char sign;  // сам знак операции
+        if (equation.indexOf("+") == -1) {  //если сивол не найден indexOf вернет -1, то есть эта строка значит - если не +
+            if (equation.indexOf("-") == -1) {  // если не -
+                if (equation.indexOf("*") == -1) {  // если не *
+                    sign_index = equation.indexOf("/");  // значит знак /, возвращаем его индекс и сам знак запоминаем
                     sign = '/';
                 } else {
-                    sign_index = equation.indexOf("*");
+                    sign_index = equation.indexOf("*");  // если не -1, значит вернет индекс знака *, запоминаем  
                     sign = '*';
                 }
             } else {
-                sign_index = equation.indexOf("-");
+                sign_index = equation.indexOf("-"); // если не -1, значит вернет индекс знака - запоминаем
                 sign = '-';
             }
         } else {
-            sign_index = equation.indexOf("+");
+            sign_index = equation.indexOf("+"); // если не -1, значит вернет индекс знака +, запоминаем
             sign = '+';
         }
 
         // ищем в q и w знаки ?, заменяем на числа от 0 до 9
-        boolean flag = false;
-        for (int i = 0; i < 10; i++) {
-            String q_str = equation.substring(0, sign_index);
-            String w_str = equation.substring(sign_index + 1, equal_sign);
-            String i_str = Integer.toString(i);
-            q_str = q_str.replace("?", i_str);
-            w_str = w_str.replace("?", i_str);
-            int q = Integer.parseInt(q_str);
+        boolean flag = false;   // для случая если нет решения
+        for (int i = 1; i < 10; i++) {   // делаем цикл от 1 до 9, можно поставить от 0, но при делении тогда выходит ошибка.
+            // в цикле на оба места подставляем вместо ? значения i от 1 до 9.
+            String q_str = equation.substring(0, sign_index); // выделяем подстроку q от 0, до индекса знака
+            String w_str = equation.substring(sign_index + 1, equal_sign); // выделяем подстроку w от индекса знака +1 до индекса знака =
+            String i_str = Integer.toString(i);                            // переводим i в строку
+            q_str = q_str.replace("?", i_str);                    // заменяем q строке ? на i
+            w_str = w_str.replace("?", i_str);                 // заменяем w строке ? на i
+            int q = Integer.parseInt(q_str);                             // переводим в числорезультат 
             int w = Integer.parseInt(w_str);
 
             // проверяем возможность решения
-            switch (sign) {
-                case '+':
-                    if (q + w == e) {
-                        System.out.printf("%d %s %d = %d\n", q, sign, w, e);
-                        flag = true;
-                        break;
+            switch (sign) {                              // оператор switch делает ветвление как if, смотрит знак sign)
+                case '+':                        // в случае +
+                    if (q + w == e) {              // если верно
+                        System.out.printf("%d %s %d = %d\n", q, sign, w, e);   // нашли решение
+                        flag = true;                            // флаг поднимаем
+                        break;                                   // выходим из цикла, ниже то же самое для остальных знаков
                     }
                 case '-':
                     if (q - w == e) {
@@ -78,7 +80,7 @@ public class Task4 {
                     }
             }
         }
-        if (flag == false)
+        if (flag == false)  // если флаг не поднят - пишем что решений нет!
         System.out.println("There is no solution.");
     }
 }
